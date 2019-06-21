@@ -4,11 +4,15 @@ public class User {
 
     int id;
     String name;
+    String username;
     String email;
 
-    public User(int id, String name) {
-        this.id = id;
+
+
+    public User(String name, String username, String email) {
         this.name = name;
+        this.username = username;
+        this.email = email;
     }
 
     public int getId() {
@@ -21,5 +25,9 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }
