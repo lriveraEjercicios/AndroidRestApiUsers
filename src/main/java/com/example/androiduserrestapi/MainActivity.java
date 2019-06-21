@@ -1,7 +1,9 @@
 package com.example.androiduserrestapi;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -42,11 +44,63 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                openDialog(position);
+                return true;
+            }
+        });
 
         getUsersFromRetrofit();
 
 
+    }
 
+    public void openDialog(final int position) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                this);
+        alertDialogBuilder.setTitle(getString(R.string.app_name)); //modificar el titol
+        alertDialogBuilder.setMessage("¿Seguro que quieres borrar el usuario?")
+                .setCancelable(false)
+                .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //Que volem fer si clica que si->
+                        // Esborrar del servidor primer
+                        deleteUserFromRetrofit(position);
+                    }
+                })
+                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel(); // No fem res, tanquem el Alert.
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create(); //crear el alert dialog
+        alertDialog.show(); //mostrar per pantalla
+    }
+
+    private void deleteUserFromRetrofit(final int position) {
+        MyService service = RetrofitClientInstance.getRetrofitInstance().create(MyService.class);
+        Call<Void> call = service.deleteUser(users.get(position).getId());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                //Si el llistat NO és compartit, el podem esborrar visualment:
+                users.remove(position);
+                adapter.notifyDataSetChanged();
+
+                //Si el llistat és compartit amb altres usuaris de l'app,
+                //tornar a carregar el llistat desde servidor:
+                //getUsersFromRetrofit();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
 
     }
 
