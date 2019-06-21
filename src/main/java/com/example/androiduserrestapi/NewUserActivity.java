@@ -6,6 +6,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.androiduserrestapi.model.User;
+import com.example.androiduserrestapi.retrofit.MyService;
+import com.example.androiduserrestapi.retrofit.RetrofitClientInstance;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,6 +45,7 @@ public class NewUserActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 Toast.makeText(getApplicationContext(), "Usuario creado con ID=" + response.body().getId(), Toast.LENGTH_LONG).show();
+                finish(); //Tornem al llistat.
             }
 
             @Override

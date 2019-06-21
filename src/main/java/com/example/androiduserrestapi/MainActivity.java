@@ -12,6 +12,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.androiduserrestapi.model.User;
+import com.example.androiduserrestapi.retrofit.MyService;
+import com.example.androiduserrestapi.retrofit.RetrofitClientInstance;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,9 +59,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         getUsersFromRetrofit();
-
-
     }
 
     //Menú:
